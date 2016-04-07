@@ -1,0 +1,171 @@
+#######################################
+# Operating Systems                   #
+#######################################
+
+# OS X
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+
+# KDE directory preferences
+.directory
+
+# Windows
+Desktop.ini
+Thumbs.db
+ehthumbs.db
+$RECYCLE.BIN/
+Icon?
+
+
+#######################################
+# Temporary                           #
+#######################################
+
+# Files
+*.tmp
+*.log
+
+# Directories
+log/
+logs/
+tmp/
+cache/
+
+
+#######################################
+# Archives                            #
+#######################################
+
+*.7z
+*.bz2
+*.bzip
+*.deb
+*.dmg
+*.egg
+*.gem
+*.gz
+*.iso
+*.lzma
+*.rar
+*.rpm
+*.tar
+*.xpi
+*.xz
+*.zip
+
+
+#######################################
+# IDE and Editors                     #
+#######################################
+
+# Eclipse
+*.pydevproject
+.project
+.metadata
+bin
+bin/**
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
+.externalToolBuilders/
+*.launch
+.cproject
+.buildpath
+
+# Netbeans
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml
+
+# IntelliJ IDEA
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# XCode
+xcuserdata
+project.xcworkspace
+
+# Notepad++
+nppBackup
+
+# SublimeText project files
+*.sublime-workspace
+
+# Textmate
+*.tmproj
+*.tmproject
+tmtags
+
+# vim
+.*.sw[a-z]
+*.un~
+Session.vim
+.netrwhist
+
+# Editors with AutoBackup
+*~
+
+
+#######################################
+# Build Systems                       #
+#######################################
+
+# Autotools
+Makefile.in
+autom4te.cache
+aclocal.m4
+compile
+configure
+depcomp
+install-sh
+missing
+
+# waf
+.waf-*
+.lock-*
+
+# Maven
+target
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+
+
+#######################################
+# Version Control Systems             #
+#######################################
+
+# Mercurial
+/.hg/*
+*/.hg/*
+.hgignore
+
+# SVN
+.svn/
+
+#######################################
+# Caches                              #
+#######################################
+
+# SASS
+.sass-cache
+
+
+#######################################
+# File backups                        #
+#######################################
+
+*.bak
+*.backup

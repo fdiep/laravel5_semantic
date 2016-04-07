@@ -1,0 +1,39 @@
+{
+    "dependencies": {
+        "app.js": {
+            "files": [
+                "js/app.js",
+                "js/**/*.js"
+            ]
+        },
+        "vendor.js": {
+            "main": true
+        },
+        "app.css": {
+            "files": [
+                "sass/app.scss"
+            ]
+        },
+        "vendor.css": {
+            "main": true
+        },
+        "fonts": {
+            "files": [
+                "fonts/**/*"
+            ]
+        }
+    },
+    "paths": {
+        "source": "resources/assets/",
+        "dist": "public/",
+        "build": "public/build/"
+    },
+    "config": {
+        "paths": {
+            "bower": "vendor/bower_components",
+            "resources": "resources/assets",
+            "dist": "public",
+            "build": "public/build"
+        }
+    }
+}

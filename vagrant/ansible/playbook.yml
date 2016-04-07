@@ -1,0 +1,154 @@
+---
+- name: Install LAMP, composer, node, gulp, bower
+  hosts: all
+  gather_facts: True
+
+  vars:
+    root_db_password: root
+    laravel_db_user: laravel
+    laravel_db_name: laravel
+    laravel_db_password: secretPassword
+    laravel_project_name: app
+    web_domain: local.laravel.com
+
+  tasks:
+  - name: Add the Nodesource apt key
+    apt_key: url=https://deb.nodesource.com/gpgkey/nodesource.gpg.key state=present
+    become: yes
+    become_method: sudo
+
+  - name: Add apt repos
+    apt_repository: repo={{ item }} state=present
+    with_items:
+      - ppa:ondrej/php5
+      - deb https://deb.nodesource.com/node_0.12 trusty main
+    become: yes
+    become_method: sudo
+
+  - name: Install packages
+    apt: name={{ item }} update_cache=yes state=latest
+    with_items:
+      - git
+      - python-software-properties
+      - php5
+      - php5-mcrypt
+      - php5-gd
+      - apache2
+      - libapache2-mod-php5
+      - mysql-server
+      - php5-mysql
+      - python-mysqldb
+      - build-essential
+      - nodejs
+    become: yes
+    become_method: sudo
+
+  # MySQL Setup
+  - name: Update MySQL root password for all root accounts
+    mysql_user: name=root host={{ item }} password={{ root_db_password }}
+    with_items:
+      - "{{ inventory_hostname }}"
+      - 127.0.0.1
+      - ::1
+      - localhost
+    become: yes
+    become_method: sudo
+
+  - name: Copy .my.cnf file with root password credentials
+    template: src=templates/root/.my.cnf dest=/root/.my.cnf owner=root mode=0600
+    become: yes
+    become_method: sudo
+
+  - name: Ensure anonymous users are not in the database
+    mysql_user: name='' host=$item state=absent
+    with_items:
+      - localhost
+      - "{{ inventory_hostname }}"
+    become: yes
+    become_method: sudo
+
+  - name: Create MySQL DB
+    mysql_db: name={{ laravel_db_name }} state=present
+    become: yes
+    become_method: sudo
+
+  - name: Remove the test DB
+    mysql_db: name=test state=absent
+    become: yes
+    become_method: sudo
+
+  - name: Create MySQL User
+    mysql_user: name={{ laravel_db_user }} password={{ laravel_db_password }} priv=laravel.*:ALL state=present
+    become: yes
+    become_method: sudo
+
+  # Apache setup
+  - name: Remove /var/www/html directory
+    file: dest=/var/www/html state=absent
+
+  - name: Copy laravel app vhost
+    template: src=templates/apache/laravel.conf dest=/etc/apache2/sites-available/{{ web_domain }}.conf
+    become: yes
+    become_method: sudo
+
+  - name: Enable site {{ web_domain }}
+    command: a2ensite {{ web_domain }}
+    args:
+      creates: /etc/apache2/sites-enabled/{{ web_domain }}.conf
+    become: yes
+    become_method: sudo
+    notify:
+      - restart apache2
+
+  - name: Disable site default
+    command: a2dissite 000-default
+    notify:
+      - restart apache2
+    become: yes
+    become_method: sudo
+
+  # composer
+  - name: Install composer
+    shell: curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+    args:
+      creates: /usr/local/bin/composer
+    become: yes
+    become_method: sudo
+
+  # npm global packages
+  - name: Create npm global packages directory
+    file: dest=~/.npm-packages state=directory
+
+  - name: Update npm prefix
+    shell: npm config set prefix ${HOME}/.npm-global
+
+  - name: Update .bashrc for npm
+    shell: echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> ${HOME}/.bashrc
+
+  - name: Source bashrc
+    shell: source ${HOME}/.bashrc
+    args:
+      executable: /bin/bash
+
+  - name: Install Bower
+    npm: name=bower global=yes
+
+  - name: Install Gulp
+    npm: name=gulp global=yes
+
+  handlers:
+    - name: restart apache2
+      service: name=apache2 state=restarted
+      become: yes
+      become_method: sudo
+
+  # - name: Run artisan migrate
+  #   shell: php /var/www/laravel/artisan migrate --force
+  #   become: yes
+  #   become_user: www-data
+
+  # - name: set APP_DEBUG=false
+  #   lineinfile: dest=/var/www/laravel/.env regexp='^APP_DEBUG=' line=APP_DEBUG=false
+  #
+  # - name: set APP_ENV=production
+  #   lineinfile: dest=/var/www/laravel/.env regexp='^APP_ENV=' line=APP_ENV=production

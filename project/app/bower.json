@@ -1,0 +1,45 @@
+{
+    "name": "laravel-app",
+    "description": "A boilerplate of laravel-angularjs",
+    "main": "",
+    "authors": [
+        "Felipe Diep <felipediepdev@gmail.com>"
+    ],
+    "license": "MIT",
+    "keywords": [
+        "laravel",
+        "angularjs"
+    ],
+    "moduleType": [
+        "globals"
+    ],
+    "homepage": "",
+    "private": true,
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "vendor/bower_components",
+        "test",
+        "tests"
+    ],
+    "dependencies": {
+        "angular": "angularjs#^1.5.2",
+        "font-awesome": "fontawesome#^4.5.0",
+        "semantic": "semantic-ui#^2.1.8"
+    },
+    "overrides": {
+        "semantic": {
+            "main": [
+                "dist/semantic.js",
+                "dist/semantic.css"
+            ]
+        },
+        "font-awesome": {
+            "main": [
+                "css/font-awesome.css",
+                "fonts/**/*"
+            ]
+        }
+    }
+}
