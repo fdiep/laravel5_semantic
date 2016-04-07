@@ -27,10 +27,7 @@
           .pipe(plugins.if(manifest.enabled.maps, plugins.sourcemaps.init()))
           .pipe(plugins.concat(dep.name))
           .pipe(plugins.if(manifest.enabled.maps, plugins.sourcemaps.write('.')))
-          .pipe(gulp.dest(manifest.paths.dist + 'js'))
-          .on('end', function(){
-            console.log('JS Finished');
-          });
+          .pipe(gulp.dest(manifest.paths.dist + 'js'));
       });
     };
 
@@ -42,10 +39,7 @@
           .pipe(plugins.if('*.scss', plugins.sass()))
           .pipe(plugins.concat(dep.name))
           .pipe(plugins.if(manifest.enabled.maps, plugins.sourcemaps.write('.')))
-          .pipe(gulp.dest(manifest.paths.dist + 'css'))
-          .on('end', function(){
-            console.log('CSS Finished');
-          });
+          .pipe(gulp.dest(manifest.paths.dist + 'css'));
       });
     };
 
@@ -53,10 +47,7 @@
     assetBuilder.fonts = function() {
       gulp.src(manifest.globs.fonts)
         .pipe(plugins.flatten())
-        .pipe(gulp.dest(manifest.paths.dist + 'fonts'))
-        .on('end', function(){
-          console.log('Fonts Finished');
-        });
+        .pipe(gulp.dest(manifest.paths.dist + 'fonts'));
     };
 
     // define elixir task
