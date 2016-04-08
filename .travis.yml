@@ -8,7 +8,6 @@ php:
 env:
   global:
     - appDir=project/app/
-    - npmVersion=2.14.0
     - setup=basic
 
 matrix:
@@ -21,7 +20,7 @@ matrix:
 sudo: required
 
 before_install:
-  - travis_retry npm install -g npm@'>=$npmVersion'
+  - travis_retry npm install -g npm@'>=2.14.0'
   - travis_retry composer self-update
   - npm install -g bower
   - npm install -g gulp
