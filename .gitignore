@@ -28,10 +28,7 @@ Icon?
 *.log
 
 # Directories
-log/
-logs/
 tmp/
-cache/
 
 
 #######################################
