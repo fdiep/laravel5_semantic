@@ -1,4 +1,8 @@
 {
+  "engines": {
+    "node": "0.12.x",
+    "npm": "2.14.x"
+  },
   "private": true,
   "devDependencies": {
     "asset-builder": "^1.1.0",
