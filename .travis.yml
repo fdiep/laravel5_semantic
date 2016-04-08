@@ -32,10 +32,8 @@ install:
   - if [[ $setup = 'lowest' ]]; then travis_retry composer update --prefer-dist --no-interaction --prefer-lowest --prefer-stable; fi
 
 before_script:
-  - cd $APPDIR
   - cp .env.travis .env
   - mysql -e 'create database homestead_test;'
 
 script:
-  - cd $APPDIR
   - vendor/bin/phpunit
