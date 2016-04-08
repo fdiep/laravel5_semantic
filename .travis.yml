@@ -20,6 +20,7 @@ matrix:
 sudo: false
 
 before_install:
+  - travis_retry npm install -g npm@'>=2.14.0'
   - travis_retry composer self-update
 
 install:
