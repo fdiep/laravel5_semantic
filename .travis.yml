@@ -6,8 +6,8 @@ php:
   - hhvm
 
 env:
+  - appDir=project/app/
   global:
-    - appDir=project/app/
     - setup=basic
 
 matrix:
