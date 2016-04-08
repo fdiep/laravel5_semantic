@@ -6,8 +6,8 @@ php:
   - hhvm
 
 env:
-  - appDir=project/app/
   global:
+    - APPDIR=project/app/
     - setup=basic
 
 matrix:
@@ -26,16 +26,16 @@ before_install:
   - npm install -g gulp
 
 install:
-  - cd $appDir
+  - cd $APPDIR
   - if [[ $setup = 'basic' ]]; then travis_retry composer install --no-interaction --prefer-dist; fi
   - if [[ $setup = 'stable' ]]; then travis_retry composer update --prefer-dist --no-interaction --prefer-stable; fi
   - if [[ $setup = 'lowest' ]]; then travis_retry composer update --prefer-dist --no-interaction --prefer-lowest --prefer-stable; fi
 
 before_script:
-  - cd $appDir
+  - cd $APPDIR
   - cp .env.travis .env
   - mysql -e 'create database homestead_test;'
 
 script:
-  - cd $appDir
+  - cd $APPDIR
   - vendor/bin/phpunit
