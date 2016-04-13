@@ -33,10 +33,10 @@
   gulp.task('jshint', getTask('jshint'));
   gulp.task('buildSemantic', getTask('buildSemantic'));
 
-  gulp.task('buildProd', ['clean', 'buildSemantic'], function(callback){
+  gulp.task('build', ['clean', 'buildSemantic'], function(callback){
     inSequence('default', callback);
   });
-  gulp.task('versionProd', function(callback){
+  gulp.task('buildVersion', function(callback){
     inSequence('version', 'copy', callback);
   });
 

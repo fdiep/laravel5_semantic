@@ -40,16 +40,16 @@
             "php artisan optimize",
             "npm install",
             "bower install",
-            "gulp buildProd",
-            "gulp versionProd"
+            "gulp build",
+            "gulp buildVersion"
         ],
         "post-update-cmd": [
             "php artisan clear-compiled",
             "php artisan optimize",
             "npm install",
             "bower install",
-            "gulp buildProd",
-            "gulp versionProd"
+            "gulp build",
+            "gulp buildVersion"
         ]
     },
     "config": {
