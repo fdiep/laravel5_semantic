@@ -17,7 +17,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.synced_folder "../project","/var/www/",owner:"vagrant",group:"www-data",mount_options:["dmode=775,fmode=664"]
 
   # rename box
-  config.vm.define "laravelApi" do |laravelApi| end
+  config.vm.define "laravel5Semantic" do |laravel5Semantic| end
 
   # Provision the VirtualBoxe with Ansible
   config.vm.provision "ansible" do |ansible|
@@ -28,7 +28,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Configure VM settings for server running in VirtualBox
   config.vm.provider "virtualbox" do |vb|
     # this is the name in the VirtualBox Manager UI
-    vb.name = "laravelApi"
+    vb.name = "laravel5Semantic"
     # set the system memory for the virtual machine
     vb.memory = 1024
     # number of Physical CPUs to allocate
