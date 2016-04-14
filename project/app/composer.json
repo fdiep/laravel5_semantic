@@ -53,6 +53,7 @@
         ]
     },
     "config": {
+        "process-timeout": 900,
         "preferred-install": "dist"
     }
 }
