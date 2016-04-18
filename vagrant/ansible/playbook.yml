@@ -9,7 +9,7 @@
     laravel_db_name: laravel
     laravel_db_password: secretPassword
     laravel_project_name: app
-    web_domain: local.laravel.com
+    web_domain: local.laravel5_semantic.com
 
   tasks:
   - name: Add the Nodesource apt key
@@ -42,6 +42,32 @@
       - nodejs
     become: yes
     become_method: sudo
+
+  # Enable swap
+  - name: Create swap file
+    shell: fallocate -l 4G /swapfile
+    args:
+      creates: /swapfile
+    become: yes
+    become_method: sudo
+
+  - name: Secure swap file
+    file: path=/swapfile mode=0600
+    become: yes
+    become_method: sudo
+
+  - name: Set up the swap space
+    shell: mkswap /swapfile
+    become: yes
+    become_method: sudo
+
+  - name: Enable swap
+    shell: swapon /swapfile
+    become: yes
+    become_method: sudo
+
+  - name: Make swap permanent
+    shell: echo '/swapfile   none    swap    sw    0   0' | sudo tee -a /etc/fstab
 
   # MySQL Setup
   - name: Update MySQL root password for all root accounts
@@ -136,6 +162,10 @@
   - name: Install Gulp
     npm: name=gulp global=yes
 
+  # application dependencies
+  - name: Install composer dependencies
+    composer: command=install working_dir=/var/www/{{ laravel_project_name }}
+
   handlers:
     - name: restart apache2
       service: name=apache2 state=restarted
@@ -143,12 +173,12 @@
       become_method: sudo
 
   # - name: Run artisan migrate
-  #   shell: php /var/www/laravel/artisan migrate --force
+  #   shell: php /var/www/{{ laravel_project_name }}/artisan migrate --force
   #   become: yes
   #   become_user: www-data
 
   # - name: set APP_DEBUG=false
-  #   lineinfile: dest=/var/www/laravel/.env regexp='^APP_DEBUG=' line=APP_DEBUG=false
+  #   lineinfile: dest=/var/www/{{ laravel_project_name }}/.env regexp='^APP_DEBUG=' line=APP_DEBUG=false
   #
   # - name: set APP_ENV=production
-  #   lineinfile: dest=/var/www/laravel/.env regexp='^APP_ENV=' line=APP_ENV=production
+  #   lineinfile: dest=/var/www/{{ laravel_project_name }}/.env regexp='^APP_ENV=' line=APP_ENV=production

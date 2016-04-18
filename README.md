@@ -11,8 +11,16 @@ Install the following:
 - [VirtualBox]
 - [Vagrant]
 - [Ansible]
+- [NodeJS]
 
 ## Installation
+
+Your host machine will need to have bower and gulp installed globally
+
+```sh
+$ npm install -g bower
+$ npm install -g gulp
+```
 
 The vagrant directory stores the Vagrant file to create the VM and provision it with Ansible. Navigate to directory and install VM.
 
@@ -32,9 +40,28 @@ Add the following to the host machine's *hosts* file
 
 This will allow you to reach the application from the host machine by visiting *local.laravel5_semantic.com*
 
-### Gulp Tasks
+Now we need to install the node dependencies. On the host machine navigate to the app directory and run *npm install*
 
-The following commands need to be run inside the vagrant machine. Unless you *npm install* inside your host machine.
+```sh
+$ cd project/app && npm install
+```
+
+Now lets download all bower dependencies
+
+```sh
+$ bower install
+```
+
+Finally lets build all assets
+
+```sh
+$ gulp build
+$ gulp buildVersion
+```
+
+Now you can test the application and navigate to *local.laravel5_semantic.com* with your favorite browser.
+
+### Gulp Tasks
 
 Build (Need to run 2 tasks in order to build all assets)
 
@@ -80,4 +107,5 @@ MIT
 [Vagrant]: <https://www.vagrantup.com/>
 [Ansible]: <http://docs.ansible.com/ansible/intro_installation.html>
 [VirtualBox]: <https://www.virtualbox.org/>
+[NodeJS]: <https://nodejs.org/>
 [Semantic UI instructions]: <http://semantic-ui.com/usage/theming.html>

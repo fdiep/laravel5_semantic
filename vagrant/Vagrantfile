@@ -30,8 +30,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # this is the name in the VirtualBox Manager UI
     vb.name = "laravel5Semantic"
     # set the system memory for the virtual machine
-    vb.memory = 1024
+    vb.memory = 2048
     # number of Physical CPUs to allocate
     vb.cpus = 2
+    # allow vagrant to create symlinks
+    vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
   end
 end

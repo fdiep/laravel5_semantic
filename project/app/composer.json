@@ -37,23 +37,14 @@
         ],
         "post-install-cmd": [
             "php artisan clear-compiled",
-            "php artisan optimize",
-            "npm install",
-            "bower install",
-            "gulp build",
-            "gulp buildVersion"
+            "php artisan optimize"
         ],
         "post-update-cmd": [
             "php artisan clear-compiled",
-            "php artisan optimize",
-            "npm install",
-            "bower install",
-            "gulp build",
-            "gulp buildVersion"
+            "php artisan optimize"
         ]
     },
     "config": {
-        "process-timeout": 900,
         "preferred-install": "dist"
     }
 }
