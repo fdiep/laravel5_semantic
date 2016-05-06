@@ -38,6 +38,8 @@ install:
 before_script:
   - cp .env.travis .env
   - mysql -e 'create database homestead_test;'
+  - a2enmod rewrite
+  - service apache2 restart
 
 script:
   - vendor/bin/phpunit
