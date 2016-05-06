@@ -21,7 +21,7 @@
     apt_repository: repo={{ item }} state=present
     with_items:
       - ppa:ondrej/php5
-      - deb https://deb.nodesource.com/node_0.12 trusty main
+      - deb https://deb.nodesource.com/node_5.x trusty main
     become: yes
     become_method: sudo
 
@@ -42,32 +42,6 @@
       - nodejs
     become: yes
     become_method: sudo
-
-  # Enable swap
-  - name: Create swap file
-    shell: fallocate -l 4G /swapfile
-    args:
-      creates: /swapfile
-    become: yes
-    become_method: sudo
-
-  - name: Secure swap file
-    file: path=/swapfile mode=0600
-    become: yes
-    become_method: sudo
-
-  - name: Set up the swap space
-    shell: mkswap /swapfile
-    become: yes
-    become_method: sudo
-
-  - name: Enable swap
-    shell: swapon /swapfile
-    become: yes
-    become_method: sudo
-
-  - name: Make swap permanent
-    shell: echo '/swapfile   none    swap    sw    0   0' | sudo tee -a /etc/fstab
 
   # MySQL Setup
   - name: Update MySQL root password for all root accounts
@@ -109,6 +83,13 @@
     become_method: sudo
 
   # Apache setup
+  - name: Enabled mod_rewrite
+    apache2_module: name=rewrite state=present
+    notify:
+      - restart apache2
+    become: yes
+    become_method: sudo
+
   - name: Remove /var/www/html directory
     file: dest=/var/www/html state=absent
 
@@ -121,10 +102,10 @@
     command: a2ensite {{ web_domain }}
     args:
       creates: /etc/apache2/sites-enabled/{{ web_domain }}.conf
-    become: yes
-    become_method: sudo
     notify:
       - restart apache2
+    become: yes
+    become_method: sudo
 
   - name: Disable site default
     command: a2dissite 000-default
@@ -141,44 +122,46 @@
     become: yes
     become_method: sudo
 
-  # npm global packages
-  - name: Create npm global packages directory
-    file: dest=~/.npm-packages state=directory
-
-  - name: Update npm prefix
-    shell: npm config set prefix ${HOME}/.npm-global
-
-  - name: Update .bashrc for npm
-    shell: echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> ${HOME}/.bashrc
-
-  - name: Source bashrc
-    shell: source ${HOME}/.bashrc
-    args:
-      executable: /bin/bash
-
-  - name: Install Bower
-    npm: name=bower global=yes
-
-  - name: Install Gulp
-    npm: name=gulp global=yes
+  # NPM dependencies
+  - name: Install NPM global dependencies
+    npm: name={{ item }} global=yes
+    with_items:
+      - bower
+      - gulp
+    become: yes
+    become_method: sudo
 
   # application dependencies
+  - name: Install node dependencies
+    npm: path=/var/www/{{ laravel_project_name }}
+
+  - name: Enable local env
+    shell: cp .env.local .env
+    args:
+      chdir: /var/www/{{ laravel_project_name }}
+
   - name: Install composer dependencies
     composer: command=install working_dir=/var/www/{{ laravel_project_name }}
+
+  - name: Install bower dependencies
+    bower: path=/var/www/{{ laravel_project_name }}
+
+  - name: Build assets
+    shell: gulp {{ item }}
+    with_items:
+      - build
+      - buildVersion
+    args:
+      chdir: /var/www/{{ laravel_project_name }}
+
+  # run DB migrations
+  - name: Run artisan migrate
+    shell: php /var/www/{{ laravel_project_name }}/artisan migrate --force
+    become: yes
+    become_user: www-data
 
   handlers:
     - name: restart apache2
       service: name=apache2 state=restarted
       become: yes
       become_method: sudo
-
-  # - name: Run artisan migrate
-  #   shell: php /var/www/{{ laravel_project_name }}/artisan migrate --force
-  #   become: yes
-  #   become_user: www-data
-
-  # - name: set APP_DEBUG=false
-  #   lineinfile: dest=/var/www/{{ laravel_project_name }}/.env regexp='^APP_DEBUG=' line=APP_DEBUG=false
-  #
-  # - name: set APP_ENV=production
-  #   lineinfile: dest=/var/www/{{ laravel_project_name }}/.env regexp='^APP_ENV=' line=APP_ENV=production
